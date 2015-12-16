@@ -2,8 +2,16 @@
 
 [![build status](https://img.shields.io/travis/gratex/drequire/master.svg?style=flat-square)](https://travis-ci.org/gratex/drequire)
 
+
+
 Synchronous loader of dojo modules (or other modules that use dojo AMD loader).
 Path to dojo is passed as env variable DOJO\_BASE\_PATH or as *baseUrl* param in dojoConfig
+
+## Install
+
+Node module (not on npm for now), so use:
+
+	npm install --save https://github.com/gratex/drequire
 
 ## Usage
 
