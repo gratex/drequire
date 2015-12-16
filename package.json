@@ -1,0 +1,20 @@
+{
+  "name": "drequire",
+  "version": "1.0.0",
+  "description": "Synchronous loader of dojo modules (or other modules that use dojo AMD loader).",
+  "main": "drequire.js",
+  "scripts": {
+    "test": "mocha test/test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gratex/drequire.git"
+  },
+  "author": "Adrian Rakovsky",
+  "license": "ISC",
+  "devDependencies": {
+    "assert": "^1.3.0",
+    "dojo": "^1.10.4",
+    "mocha": "^2.3.4"
+  }
+}
