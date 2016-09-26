@@ -13,6 +13,19 @@ Node module, so use:
 
 	npm install --save drequire
 
+You need dojo/dojox on your disk somewhere
+and drequire needs path ``export DOJO_BASE_PATH`` to that install
+
+Example:
+
+	mkdir resources
+	cd resources
+	export DOJO_BASE_PATH="$(pwd)""
+	git clone https://github.com/dojo/dojo.git
+	git clone https://github.com/dojo/dojox.git
+	# ... any other dojo compatible AMD libs you want to use from node	
+
+
 ## Usage
 
 	var drequire = require("drequire")({
@@ -28,6 +41,7 @@ Passed *dojoConfig* will be mixed into
 		async : false,
 		baseUrl : path.resolve(process.env["DOJO_BASE_PATH"], "dojo")
 	}
+
 
 
 ## Known issues
