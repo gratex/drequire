@@ -20,7 +20,7 @@ Example:
 
 	mkdir resources
 	cd resources
-	export DOJO_BASE_PATH="$(pwd)""
+	export DOJO_BASE_PATH="$(pwd)" # abs path, folder above dojo
 	git clone https://github.com/dojo/dojo.git
 	git clone https://github.com/dojo/dojox.git
 	# ... any other dojo compatible AMD libs you want to use from node	
