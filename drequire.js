@@ -13,7 +13,7 @@ Path to dojo is passed as env variable DOJO\_BASE\_PATH or as *baseUrl* param in
 var path = require("path");
 /*global module:true,global:true,process:true */
 module.exports = function(dojoConfig) {
-	var defaultConfig = { //defaults
+	var defaultConfig = {//defaults
 		async : false, //dojo.require will exists now
 		//if you dont have GJAX_DOJO_BASE env, send it as param in dojoConfig
 		baseUrl : process.env["DOJO_BASE_PATH"] && path.resolve(process.env["DOJO_BASE_PATH"], "dojo") || null
@@ -25,5 +25,14 @@ module.exports = function(dojoConfig) {
 	}
 	global.dojoConfig = config; //REVIEW: I beliveve this can also go away
 	require(path.resolve(global.dojoConfig.baseUrl, "dojo.js")); //this will ensure that global variable 'dojo' exists
-	return dojo.require;
+
+	var dojoDefine = global.define;
+	delete global.define; //do not populate global scope with define, which would break loading of UMD modules
+
+	return function() {
+		global.define = dojoDefine;
+		var module = dojo.require.apply(null, arguments);
+		delete global.define;
+		return module;
+	};
 };

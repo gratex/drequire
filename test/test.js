@@ -22,4 +22,7 @@ describe("drequire", function() {
 		});
 		assert.equal(formattedDate, "16.1.2016", "Date should be formatted according to passed 'locale' to dojoConfig");
 	});
+	it("should not populate global scope with 'define' (would break loading of UMD modules)", function() {
+		assert.equal(typeof global.define, "undefined", "Global 'dojo' variable is expected to be an object");
+	});
 });
