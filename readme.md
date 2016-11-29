@@ -44,8 +44,8 @@ Passed *dojoConfig* will be mixed into
 
 
 
-## Known issues
+## Poluting global scope
 
-When used together with loadash, loadash must be required before drequire, otherwise loadash will not work (talking about first require in application).
+drequire (since 2.0.0) does NOT create global `define` variable (so UMD modules loaded after using `drequire` are working correctly)
 
-This issue is caused by code in lodash's 'factory', which checks if 'define' exists, and  switches itself to AMD mode. (drequire loads dojo, which creates global 'define' function).
+drequire creates global `dojo` object
