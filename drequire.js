@@ -11,8 +11,15 @@ Path to dojo is passed as env variable DOJO\_BASE\_PATH or as *baseUrl* param in
 */
 
 var path = require("path");
+var drequire = null;
 /*global module:true,global:true,process:true */
 module.exports = function(dojoConfig) {
+
+	if (drequire) {
+		console.warn("WARNING: drequire factory was already called. it is not possible to create two dojo AMD loaders. first loader will be returned");
+		return drequire;
+	}
+
 	var defaultConfig = {//defaults
 		async : false, //dojo.require will exists now
 		//if you dont have GJAX_DOJO_BASE env, send it as param in dojoConfig
@@ -29,10 +36,12 @@ module.exports = function(dojoConfig) {
 	var dojoDefine = global.define;
 	delete global.define; //do not populate global scope with define, which would break loading of UMD modules
 
-	return function() {
+	drequire = function() {
 		global.define = dojoDefine;
 		var module = dojo.require.apply(null, arguments);
 		delete global.define;
 		return module;
 	};
+
+	return drequire;
 };

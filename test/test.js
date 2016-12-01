@@ -2,7 +2,7 @@ var assert = require("assert");
 var path = require("path");
 
 var drequire = require("../drequire")({
-	baseUrl : path.resolve(__dirname, "../node_modules/dojo"),
+	baseUrl : "/home/UX/arakovskyux/workspaces/UniusNg/UI/app-ui/src/main/webapp/resources/dojo",
 	locale : "sk-sk"
 });
 
@@ -24,5 +24,16 @@ describe("drequire", function() {
 	});
 	it("should not populate global scope with 'define' (would break loading of UMD modules)", function() {
 		assert.equal(typeof global.define, "undefined", "Global 'dojo' variable is expected to be an object");
+	});
+	it("multiple drequire works", function() {
+
+		var drequire2 = require("../drequire")({
+			baseUrl : "/home/UX/arakovskyux/workspaces/UniusNg/UI/app-ui/src/main/webapp/resources/dojo",
+			locale : "sk-sk"
+		});
+
+		var stamp = drequire2("dojo/date/stamp");
+		assert.equal(typeof stamp, "object", "Loaded dojo module should be an object");
+		assert.equal(typeof stamp.fromISOString, "function", "Loaded dojo module should have 'fromISOString' function");
 	});
 });
