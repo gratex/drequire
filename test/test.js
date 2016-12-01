@@ -2,7 +2,7 @@ var assert = require("assert");
 var path = require("path");
 
 var drequire = require("../drequire")({
-	baseUrl : "/home/UX/arakovskyux/workspaces/UniusNg/UI/app-ui/src/main/webapp/resources/dojo",
+	baseUrl : path.resolve(__dirname, "../node_modules/dojo"),
 	locale : "sk-sk"
 });
 
