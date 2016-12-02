@@ -11,39 +11,79 @@ Path to dojo is passed as env variable DOJO\_BASE\_PATH or as *baseUrl* param in
 */
 
 var path = require("path");
-var drequire = null;
+var dojoGlobals = null;
+
 /*global module:true,global:true,process:true */
 module.exports = function(dojoConfig) {
 
-    if (drequire) {
-        console.warn("WARNING: drequire factory was already called. it is not possible to create two dojo AMD loaders. first loader will be returned");
-        return drequire;
+    if (!dojoGlobals) {
+
+        // config
+        var config = Object.assign({ //defaults
+            async: false, //dojo.require will exists now
+            //if you dont have GJAX_DOJO_BASE env, send it as param in dojoConfig
+            baseUrl: process.env["DOJO_BASE_PATH"] && path.resolve(process.env["DOJO_BASE_PATH"], "dojo") || null
+        }, dojoConfig);
+        if (!config.baseUrl) {
+            throw new Error("'baseUrl' is required and is missing, please pass as argument or define 'DOJO_BASE_PATH' environment variable");
+        }
+
+        // load dojo
+        var pathToDojoJs = path.resolve(config.baseUrl, "dojo.js")
+        dojoGlobals = requireDojo(config, pathToDojoJs);
+
+        //console.log(dojoGlobals);
+    } else {
+        if (dojoConfig && Object.keys(dojoConfig).length) {
+            //console.warn("[WARN]: dojo config alteady configured, config ignored");
+        }
     }
-
-    var defaultConfig = { //defaults
-        async: false, //dojo.require will exists now
-        //if you dont have GJAX_DOJO_BASE env, send it as param in dojoConfig
-        baseUrl: process.env["DOJO_BASE_PATH"] && path.resolve(process.env["DOJO_BASE_PATH"], "dojo") || null
-    };
-    var config = Object.assign({}, defaultConfig, dojoConfig);
-
-    if (!config.baseUrl) {
-        throw new Error("'baseUrl' is required and is missing, please pass as argument or define 'DOJO_BASE_PATH' environment variable");
-    }
-    var pathToDojoJs = path.resolve(config.baseUrl, "dojo.js")
-    global.dojoConfig = config; //REVIEW: I beliveve this can also go away
-
-    require(pathToDojoJs); //this will ensure that global variable 'dojo' exists
-
-    var dojoDefine = global.define;
-    delete global.define; //do not populate global scope with define, which would break loading of UMD modules
-
-    drequire = function() {
-        global.define = dojoDefine;
-        var module = dojo.require.apply(null, arguments);
-        delete global.define;
-        return module;
+    var drequire = function() {
+        try {
+            mixGlobals(dojoGlobals);
+            var module = global.dojo.require.apply(null, arguments);
+            return module;
+        } finally {
+            unmixGlobals(dojoGlobals);
+        }
     };
 
     return drequire;
 };
+
+function requireDojo(config, path) {
+    // requires module that exports {} but sets some globals
+    // unsets the glovals and returs them
+    // to ind globals it uses primitive logic of comparing global keys
+    // TODO: contextLoading, but dojo will not load in empty context, investigate
+    // and create fake context for dojo to load, the return new context
+    var globalsBefore = Object.keys(global);
+
+    global.dojoConfig = config;
+    require(path);
+
+    var globalsAfter = Object.keys(global);
+    // 
+    var globalsNew = globalsAfter.filter(function(a) {
+        return !~globalsBefore.indexOf(a);
+    });
+    //console.error("[globalsNew]:", globalsNew);
+    var r = {};
+    globalsNew.forEach(function(k) {
+        r[k] = global[k];
+        delete global[k];
+    });
+    return r;
+}
+
+function mixGlobals(globals) {
+    for (var p in globals) {
+        global[p] = globals[p];
+    }
+}
+
+function unmixGlobals(globals) {
+    for (var p in globals) {
+        delete global[p];
+    }
+}
