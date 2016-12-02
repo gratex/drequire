@@ -52,5 +52,15 @@ describe("drequire", function() {
 
         assert.equal(stamp1.getNames("months", "wide", "standAlone")[0], "január");
         assert.equal(stamp2.getNames("months", "wide", "standAlone")[0], "január");
+        /* 
+        	https://dojotoolkit.org/reference-guide/1.7/dojo/_base/config.html
+        	Both the data-dojo-config script attribute and the dojoConfig 
+           	global have the same result - their properties are copied over into dojo.config. 
+           	In the data attribute case, no dojoConfig global gets created; 
+           	after bootstrap, dojo.config is the single source of truth 
+           	for configuration properties. 
+           	For that reason it is also typically treated as a read-only object 
+         	...	
+         */
     });
 });

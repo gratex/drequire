@@ -16,7 +16,7 @@ var dojoGlobals = null;
 /*global module:true,global:true,process:true */
 module.exports = function(dojoConfig) {
 
-    if (!dojoGlobals) {
+    if (!dojoGlobals) { //bootsrap of configs
 
         // config
         var config = Object.assign({ //defaults
@@ -33,9 +33,22 @@ module.exports = function(dojoConfig) {
         dojoGlobals = requireDojo(config, pathToDojoJs);
 
         //console.log(dojoGlobals);
-    } else {
-        if (dojoConfig && Object.keys(dojoConfig).length) {
+    } else { // already bootsraped
+        if (dojoConfig && Object.keys(dojoConfig).length) { //override bootsrapped ?
             //console.warn("[WARN]: dojo config alteady configured, config ignored");
+
+            /* 
+			https://dojotoolkit.org/reference-guide/1.7/dojo/_base/config.html
+            Both the data-dojo-config script attribute and the dojoConfig 
+           	global have the same result - their properties are copied over into dojo.config. 
+           	In the data attribute case, no dojoConfig global gets created; 
+           	after bootstrap, dojo.config is the single source of truth 
+           	for configuration properties. 
+           	For that reason it is also typically treated as a read-only object 
+         	...	
+         	*/
+        } else { // inheriting bootstraped
+
         }
     }
     var drequire = function() {
