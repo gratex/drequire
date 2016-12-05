@@ -43,9 +43,11 @@ Passed *dojoConfig* will be mixed into
 	}
 
 
+## BEWARE: Versions and poluting global scope
 
-## Poluting global scope
+1.x - poluted global scope
+2.x - does NOT create global `define` variable (so some UMD modules loaded after using drquire worked)
+3.x - back to original simple version, polutes the scope again, 2.x was more trouble then benefit
 
-drequire (since 2.0.0) does NOT create global `define` variable (so UMD modules loaded after using `drequire` are working correctly)
 
-drequire creates global `dojo` object
+
