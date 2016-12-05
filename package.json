@@ -1,6 +1,6 @@
 {
   "name": "drequire",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "description": "Synchronous loader of dojo modules (or other modules that use dojo AMD loader).",
   "main": "drequire.js",
   "scripts": {

@@ -13,19 +13,21 @@ var path = require("path");
 /*global module:true,global:true,process:true */
 
 module.exports = function(dojoConfig) {
-    var config = { // defaults
-        async: false, // dojo.require will exists now
-        // if you dont have GJAX_DOJO_BASE env, send it as param in dojoConfig
-        baseUrl: process.env["DOJO_BASE_PATH"] && path.resolve(process.env["DOJO_BASE_PATH"], "dojo") || null
-    };
-    for (var p in dojoConfig) {
-        config[p] = dojoConfig[p];
+    if (!global.dojo) {
+        var config = { // defaults
+            async: false, // dojo.require will exists now
+            // if you dont have GJAX_DOJO_BASE env, send it as param in dojoConfig
+            baseUrl: process.env["DOJO_BASE_PATH"] && path.resolve(process.env["DOJO_BASE_PATH"], "dojo") || null
+        };
+        for (var p in dojoConfig) {
+            config[p] = dojoConfig[p];
+        }
+        if (!config.baseUrl) {
+            throw new Error("'baseUrl' is required and is missing, please pass as argument or define 'DOJO_BASE_PATH' environment variable");
+        }
+        global.dojoConfig = config; // REVIEW: I beliveve this can also go away
+        require(path.resolve(global.dojoConfig.baseUrl, "dojo.js")); // this will ensure that global variable 'dojo' exists
     }
-    if (!config.baseUrl) {
-        throw new Error("'baseUrl' is required and is missing, please pass as argument or define 'DOJO_BASE_PATH' environment variable");
-    }
-    global.dojoConfig = config; // REVIEW: I beliveve this can also go away
-    global.dojo || require(path.resolve(global.dojoConfig.baseUrl, "dojo.js")); // this will ensure that global variable 'dojo' exists
     return global.dojo.require;
 };
 
